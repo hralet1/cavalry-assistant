@@ -118,4 +118,4 @@ Built with:
 - [LanceDB](https://github.com/lancedb/lancedb) — vector database for RAG
 - [Ollama](https://ollama.com/) + [nomic-embed-text](https://ollama.com/library/nomic-embed-text) — local embeddings
 
-Knowledge base sourced from the [Cavalry official docs](https://docs.cavalry.scenegroup.co/) and the Cavalry Discord community.
+Knowledge base sourced from the [Cavalry official docs](https://docs.cavalry.scenegroup.co/) and the Cavalry community.
