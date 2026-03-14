@@ -15,8 +15,12 @@ etl/sources/discord/*.json
 etl/sources/docs/
 etl/sources/scenery/
 
-# LanceDB vector store — large binary data, rebuild via ETL
+# LanceDB vector stores — large binary data, never commit
+# Private DB (includes Discord): rebuild via ETL
 data/lancedb/
+# Public DB snapshot: build via export_public_db.py, zip for GitHub Releases
+data/lancedb_public/
+data/lancedb_public.zip
 etl/data/
 *.lance
 

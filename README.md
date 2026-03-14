@@ -9,7 +9,7 @@ An AI assistant for [Cavalry](https://cavalry.scenegroup.co/) that lets Claude w
 ## What it does
 
 - **Write & run scripts** — Claude executes Cavalry JavaScript live via the Stallion bridge
-- **Knows the docs** — searches 37,000+ chunks of Cavalry documentation semantically
+- **Knows the docs** — searches 40,000+ chunks of Cavalry documentation, real scenes, and community knowledge semantically
 - **Scene-aware** — reads and saves your active scene
 - **Stays current** — auto-loads a verified best-practices reference on every session
 
@@ -21,14 +21,14 @@ An AI assistant for [Cavalry](https://cavalry.scenegroup.co/) that lets Claude w
 |------|---------|
 | [Cavalry](https://cavalry.scenegroup.co/) | The app — needs Stallion enabled |
 | [Node.js 18+](https://nodejs.org/) | Runs the MCP server |
-| [Ollama](https://ollama.com/) | Local embeddings (or Docker) |
+| [Ollama](https://ollama.com/) | Local embeddings |
 | [Claude Code](https://claude.ai/claude-code) | The AI client |
 
 ---
 
-## Setup
+## Quick Setup (pre-built knowledge base)
 
-### 1. Install
+### 1. Clone and install
 
 ```bash
 git clone <repo-url> cavalry-assistant
@@ -38,64 +38,123 @@ npm install --prefix mcp
 npm run build --prefix mcp
 ```
 
-### 2. Start Ollama
+### 2. Download the knowledge base
 
-```bash
-# Docker (recommended)
-docker compose up ollama -d
-docker exec -it cavalry-assistant-ollama-1 ollama pull nomic-embed-text
+Download `lancedb_public.zip` from [GitHub Releases](../../releases/latest), extract into the project:
 
-# Or local Ollama
-ollama pull nomic-embed-text
+```
+cavalry-assistant/
+  data/
+    lancedb_public/    ← extract here
 ```
 
-### 3. Connect to Claude Code
+Update `.env`:
 
-The `.mcp.json` in this folder auto-registers when you open it in Claude Code. Or manually:
+```env
+LANCEDB_PATH=./data/lancedb_public
+```
+
+> **Windows / network drive users:** LanceDB requires a local drive. Set an absolute local path:
+> `LANCEDB_PATH=C:/Users/yourname/.cavalry-assistant/lancedb_public`
+
+### 3. Start Ollama
 
 ```bash
-claude mcp add cavalry-assistant node mcp/dist/index.js
+ollama pull nomic-embed-text
 ```
 
 ### 4. Enable Stallion in Cavalry
 
 `Scripts > Stallion` — leave it running on port 8080.
 
-### 5. Start a session
+### 5. Connect to Claude Code
+
+The `.mcp.json` in this folder auto-registers when opened in Claude Code. Or manually:
+
+```bash
+claude mcp add cavalry-assistant node mcp/dist/index.js
+```
+
+### 6. Start a session
 
 ```
 /cavalry
 ```
 
-Claude pings Stallion and confirms the connection.
+---
+
+## Knowledge Base
+
+The pre-built public knowledge base includes:
+
+| Source | Content |
+|--------|---------|
+| Official docs | Full Cavalry documentation |
+| Scenery scenes | 270 real `.cv` scene files — real-world node/connection patterns |
+| Manual reference | Curated scripting patterns and best practices |
+| Scripts | Example JavaScript scripts |
+
+The public knowledge base **does not** include Discord community data (private).
 
 ---
 
-## Docker (full stack)
+## Building the Knowledge Base (contributors)
 
-```bash
-docker compose up -d
-```
+To build your own private knowledge base with all sources including Discord:
 
-Rebuild the knowledge base (optional):
-
-```bash
-docker compose --profile tools run etl python ingest.py --source all
-```
-
----
-
-## Rebuilding the Knowledge Base
-
-The knowledge base comes pre-built in `data/lancedb/`. To rebuild:
+### 1. Set up Python
 
 ```bash
 cd etl
 pip install -r requirements.txt
+```
 
-python ingest.py --source docs      # official docs
-python ingest.py --source discord   # Discord export (needs DISCORD_TOKEN)
-python ingest.py --source all --reset
+### 2. Configure `.env`
+
+Set a local path for your private DB and add credentials:
+
+```env
+LANCEDB_PATH=C:/Users/yourname/.cavalry-assistant/lancedb
+DISCORD_TOKEN=your_token
+DISCORD_CHANNEL_IDS=channel_id_1,channel_id_2
+SCENERY_COOKIE=your_session_cookie
+```
+
+### 3. Run ETL
+
+```bash
+cd ..  # project root
+
+# Public sources
+python etl/ingest.py --source docs
+python etl/ingest.py --source scenery
+python etl/ingest.py --source manual
+python etl/ingest.py --source scripts
+python etl/ingest.py --source cv
+
+# Private sources (stays local, never exported)
+python etl/ingest.py --source discord
+```
+
+### 4. Export and publish a public release
+
+```bash
+# Build public snapshot (filters out Discord)
+python etl/export_public_db.py --zip
+
+# Publish to GitHub Releases
+gh release create v1.x --title "Knowledge Base v1.x" data/lancedb_public.zip
+```
+
+### 5. Add new scenes from Scenery
+
+```bash
+# Scrape new .cv files
+python etl/scrape_scenery.py
+
+# Ingest and re-export
+python etl/ingest.py --source cv
+python etl/export_public_db.py --zip
 ```
 
 ---
@@ -105,6 +164,7 @@ python ingest.py --source all --reset
 - Stallion always responds `"Success"` — check Cavalry's console panel for actual errors
 - Always start scene-modifying scripts with `api.stop()`
 - Full API reference: `prompts/cavalry-best-practices.md`
+- The public DB is always a clean snapshot — no Discord messages, no credentials, no user data
 
 ---
 
@@ -118,4 +178,4 @@ Built with:
 - [LanceDB](https://github.com/lancedb/lancedb) — vector database for RAG
 - [Ollama](https://ollama.com/) + [nomic-embed-text](https://ollama.com/library/nomic-embed-text) — local embeddings
 
-Knowledge base sourced from the [Cavalry official docs](https://docs.cavalry.scenegroup.co/) and the Cavalry community.
+Knowledge base sourced from the [Cavalry official docs](https://docs.cavalry.scenegroup.co/), [Scenery](https://scenery.io/), and the Cavalry community.
