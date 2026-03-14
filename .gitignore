@@ -41,6 +41,9 @@ channel.md
 # Debug output files
 debug_*.json
 
+# Private internal docs
+docs/
+
 # Temp / misc
 *.bak
 .DS_Store
