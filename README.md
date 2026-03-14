@@ -1,8 +1,16 @@
-<img src="logo/logo_cavalry-landscape-outline_white.svg" alt="Cavalry" width="300"/>
+<div align="center">
+
+<img src="logo/WRA_LOGO.png" alt="WRA" width="260"/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="logo/logo_cavalry-landscape-outline_001.svg" alt="Cavalry" width="260"/>
+
+<br/>
 
 # WRA Cavalry Assistant
 
-An AI assistant for [Cavalry](https://cavalry.scenegroup.co/) that lets Claude write and run Cavalry scripts directly — no copy-pasting, no switching windows.
+**Claude writes and runs Cavalry scripts live — no copy-pasting, no window switching.**
+
+</div>
 
 ---
 
@@ -85,8 +93,6 @@ claude mcp add cavalry-assistant node mcp/dist/index.js
 
 ## Knowledge Base
 
-The pre-built public knowledge base includes:
-
 | Source | Content |
 |--------|---------|
 | Official docs | Full Cavalry documentation |
@@ -100,8 +106,6 @@ The public knowledge base **does not** include Discord community data (private).
 
 ## Building the Knowledge Base (contributors)
 
-To build your own private knowledge base with all sources including Discord:
-
 ### 1. Set up Python
 
 ```bash
@@ -110,8 +114,6 @@ pip install -r requirements.txt
 ```
 
 ### 2. Configure `.env`
-
-Set a local path for your private DB and add credentials:
 
 ```env
 LANCEDB_PATH=C:/Users/yourname/.cavalry-assistant/lancedb
@@ -139,20 +141,14 @@ python etl/ingest.py --source discord
 ### 4. Export and publish a public release
 
 ```bash
-# Build public snapshot (filters out Discord)
 python etl/export_public_db.py --zip
-
-# Publish to GitHub Releases
 gh release create v1.x --title "Knowledge Base v1.x" data/lancedb_public.zip
 ```
 
 ### 5. Add new scenes from Scenery
 
 ```bash
-# Scrape new .cv files
 python etl/scrape_scenery.py
-
-# Ingest and re-export
 python etl/ingest.py --source cv
 python etl/export_public_db.py --zip
 ```
@@ -164,18 +160,12 @@ python etl/export_public_db.py --zip
 - Stallion always responds `"Success"` — check Cavalry's console panel for actual errors
 - Always start scene-modifying scripts with `api.stop()`
 - Full API reference: `prompts/cavalry-best-practices.md`
-- The public DB is always a clean snapshot — no Discord messages, no credentials, no user data
+- The public DB is a clean snapshot — no Discord messages, no credentials, no user data
 
 ---
 
 ## Credits
 
-Built with:
+Built with [Cavalry](https://cavalry.scenegroup.co/) by **Scene Group**, [Stallion](https://docs.cavalry.scenegroup.co/), [Model Context Protocol SDK](https://github.com/modelcontextprotocol/typescript-sdk) by **Anthropic**, [LanceDB](https://github.com/lancedb/lancedb), and [Ollama](https://ollama.com/) + [nomic-embed-text](https://ollama.com/library/nomic-embed-text).
 
-- [Cavalry](https://cavalry.scenegroup.co/) by **Scene Group** — the animation software this wraps
-- [Stallion](https://docs.cavalry.scenegroup.co/) — Cavalry's built-in scripting bridge
-- [Model Context Protocol SDK](https://github.com/modelcontextprotocol/typescript-sdk) by **Anthropic**
-- [LanceDB](https://github.com/lancedb/lancedb) — vector database for RAG
-- [Ollama](https://ollama.com/) + [nomic-embed-text](https://ollama.com/library/nomic-embed-text) — local embeddings
-
-Knowledge base sourced from the [Cavalry official docs](https://docs.cavalry.scenegroup.co/), [Scenery](https://scenery.io/), and the Cavalry community.
+Knowledge base sourced from [Cavalry official docs](https://docs.cavalry.scenegroup.co/), [Scenery](https://scenery.io/), and the Cavalry community.
