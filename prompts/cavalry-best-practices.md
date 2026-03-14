@@ -1500,3 +1500,480 @@ api.load("D:/scripts/myHelpers.js");
 | Trying to create a composition | Compositions can't be created via `api.create()` |
 | Forgetting `hidden: true` on duplicator input | Input shapes should usually be hidden |
 | Not calling `api.stop()` first | Always first line in scene-modifying scripts |
+
+---
+
+## Real-World Patterns from Scenery (270 .cv scenes)
+
+Mined from 270 Cavalry scenes published on Scenery.
+Counts show how many scene instances contain each node/pattern.
+Use these as ground-truth for what actually works in production Cavalry scenes.
+
+### Most-Used Node Types (signal nodes only)
+
+| Node Type | Instances | Scenes |
+|-----------|-----------|--------|
+| `colorMaterial` | 4998 | 270/270 |
+| `strokeMaterial` | 4098 | 270/270 |
+| `motionBlurFilter` | 2222 | 126/270 |
+| `basicShape` | 1063 | 205/270 |
+| `polygonShape` | 1005 | 190/270 |
+| `group` | 890 | 189/270 |
+| `gridDistribution` | 646 | 235/270 |
+| `duplicator` | 600 | 232/270 |
+| `ellipseShape` | 565 | 141/270 |
+| `rectangleShape` | 461 | 116/270 |
+| `colorArray` | 428 | 270/270 |
+| `null` | 329 | 58/270 |
+| `editableShape` | 322 | 57/270 |
+| `oscillator` | 286 | 115/270 |
+| `simplexNoise` | 269 | 111/270 |
+| `textShape` | 268 | 102/270 |
+| `stagger` | 266 | 106/270 |
+| `noise` | 260 | 108/270 |
+| `backgroundShape` | 208 | 131/270 |
+| `linearDistribution` | 206 | 82/270 |
+| `linearGradientShader` | 193 | 81/270 |
+| `gradientShader` | 193 | 81/270 |
+| `random` | 174 | 72/270 |
+| `pointDistribution` | 163 | 94/270 |
+| `forgeBodyAuxiliary` | 140 | 15/270 |
+| `circleDistribution` | 133 | 65/270 |
+| `simpleLine` | 132 | 67/270 |
+| `basicLine` | 132 | 67/270 |
+| `meshDistribution` | 130 | 49/270 |
+| `numberRange` | 126 | 43/270 |
+| `frame` | 115 | 64/270 |
+| `compositionReference` | 114 | 38/270 |
+| `pathDistribution` | 107 | 51/270 |
+| `customShape` | 99 | 27/270 |
+| `math` | 98 | 28/270 |
+| `align` | 94 | 45/270 |
+| `sortDistribution` | 85 | 39/270 |
+| `subMesh` | 84 | 56/270 |
+| `textValue` | 84 | 21/270 |
+| `stringGenerator` | 84 | 21/270 |
+
+### Top Connection Patterns (all scenes)
+
+Format: `source.attribute -> target.attribute [count]`
+
+- `visibilityCurve.out -> basicShape.on` [1063]
+- `colorMaterial.id -> basicShape.material` [937]
+- `visibilityCurve.out -> group.on` [751]
+- `visibilityCurve.out -> duplicator.on` [600]
+- `ellipseShape.id -> basicShape.generator` [520]
+- `rectangleShape.id -> basicShape.generator` [411]
+- `visibilityCurve.out -> null.on` [329]
+- `visibilityCurve.out -> editableShape.on` [322]
+- `basicShape.id -> duplicator.shapes.0` [314]
+- `visibilityCurve.out -> textShape.on` [268]
+- `compNode.time -> oscillator.time` [267]
+- `colorMaterial.id -> textShape.material` [260]
+- `compNode.time -> simplexNoise.time` [258]
+- `colorMaterial.id -> editableShape.material` [239]
+- `simplexNoise.id -> noise.generator` [236]
+- `strokeMaterial.id -> basicShape.stroke` [212]
+- `colorMaterial.id -> backgroundShape.material` [208]
+- `visibilityCurve.out -> backgroundShape.on` [208]
+- `compNode.resolution -> backgroundShape.resolution` [174]
+- `strokeMaterial.id -> editableShape.stroke` [173]
+- `compNode.resolution -> gradientShader.resolution` [172]
+- `gradientShader.id -> colorMaterial.colorShaders.0.shader` [138]
+- `colorArray.id -> colorMaterial.materialColor` [137]
+- `visibilityCurve.out -> basicLine.on` [132]
+- `strokeMaterial.id -> basicLine.stroke` [131]
+- `linearGradientShader.id -> gradientShader.generator` [128]
+- `simpleLine.id -> basicLine.generator` [120]
+- `ellipseShape.radius.x -> ellipseShape.radius.y` [120]
+- `rigControl.id -> animationCurve.rigControlValues` [119]
+- `pointDistribution.id -> duplicator.generator` [118]
+- `compNode.time -> frame.time` [114]
+- `compNode.id -> compositionReference.composition` [114]
+- `visibilityCurve.out -> compositionReference.on` [114]
+- `compNode.time -> compositionReference.time` [114]
+- `group.id -> duplicator.shapes.0` [112]
+- `gridDistribution.id -> duplicator.generator` [99]
+- `visibilityCurve.out -> customShape.on` [99]
+- `linearDistribution.id -> duplicator.generator` [90]
+- `duplicator.id -> meshDistribution.inputShape` [67]
+- `visibilityCurve.out -> falloff.on` [65]
+- `textValue.id -> stringGenerator.generator` [65]
+- `compNode.fps -> frame.fps` [61]
+- `sortDistribution.id -> duplicator.generator` [59]
+- `colorMaterial.materialColor -> colorMaterial.materialColor` [58]
+- `pathDistribution.id -> duplicator.generator` [57]
+- `basicLine.id -> duplicator.shapes.0` [56]
+- `rectangleShape.dimensions.x -> rectangleShape.dimensions.y` [52]
+- `stagger.id -> duplicator.shapeTimeOffset` [52]
+- `visibilityCurve.out -> connectShape.on` [51]
+- `strokeMaterial.id -> connectShape.stroke` [49]
+
+### Behaviour Node Connection Profiles
+
+What each behaviour node connects TO in real scenes:
+
+#### `attractorField` (in 11 scenes)
+
+- `attractorField.id -> forgeDynamicsShape.fields.0` [13]
+- `attractorField.id -> forgeDynamicsShape.fields.1` [2]
+
+#### `behaviourMixer` (in 12 scenes)
+
+- `behaviourMixer.id -> blendSubMeshPositions.timeOffset` [6]
+- `behaviourMixer.id -> duplicator.shapePosition` [3]
+- `behaviourMixer.id -> subMesh.shapeRotation` [2]
+- `behaviourMixer.id -> duplicator.shapeScale` [2]
+- `behaviourMixer.id -> duplicator.shapeVisibility` [2]
+- `behaviourMixer.id -> null.position.x` [1]
+- `behaviourMixer.id -> customShape.position.y` [1]
+- `behaviourMixer.id -> subMesh.shapePosition` [1]
+- `behaviourMixer.id -> duplicator.shapeRotation` [1]
+- `behaviourMixer.id -> duplicator.shapeTimeOffset` [1]
+- `behaviourMixer.id -> duplicator.shapePosition.y` [1]
+- `behaviourMixer.id -> applyTypeface.fontAxes.1` [1]
+- `behaviourMixer.id -> duplicator.shapePosition.x` [1]
+
+#### `falloff` (in 41 scenes)
+
+- `falloff.id -> noise.falloffs.0.id` [16]
+- `falloff.size.x -> falloff.size.y` [11]
+- `falloff.id -> value.falloffs.0.id` [8]
+- `falloff.id -> random.falloffs.0.id` [7]
+- `falloff.id -> oscillator.falloffs.0.id` [5]
+- `falloff.id -> lookAt.falloffs.0.id` [3]
+- `falloff.id -> pushAlongVector.falloffs.0.id` [3]
+- `falloff.id -> pinch.bindFalloff` [3]
+- `falloff.id -> valueBlend.falloffs.0.id` [3]
+- `falloff.id -> attractorField.falloffs.0.id` [3]
+- `falloff.id -> getVector.target` [2]
+- `falloff.id -> random.falloffs.1.id` [2]
+- `falloff.id -> value.falloffs.1.id` [2]
+- `falloff.id -> subMesh.falloffs.0.id` [1]
+- `falloff.id -> pushAlongVector.falloffs.2.id` [1]
+- `falloff.id -> pushAlongVector.falloffs.1.id` [1]
+- `falloff.id -> pushAlongVector.falloffs.3.id` [1]
+- `falloff.id -> value2.falloffs.1.id` [1]
+- `falloff.id -> random.falloffs.2.id` [1]
+- `falloff.id -> value2Blend.falloffs.0.id` [1]
+
+#### `mathDistribution` (in 4 scenes)
+
+- `mathDistribution.id -> duplicator.generator` [18]
+- `mathDistribution.id -> pointsToCurve.generator` [1]
+
+#### `noise` (in 108 scenes)
+
+- `noise.id -> duplicator.shapePosition` [26]
+- `noise.id -> numberRange.value` [25]
+- `noise.id -> basicShape.position` [21]
+- `noise.id -> basicShape.deformers.0` [13]
+- `noise.id -> null.position` [11]
+- `noise.id -> random.seed` [10]
+- `noise.id -> duplicator.shapeRotation` [9]
+- `noise.id -> colorArray.arrayIndex` [9]
+- `noise.id -> falloff.position` [7]
+- `noise.id -> behaviourMixer.behaviour.1.id` [6]
+- `noise.id -> convexHull.deformers.2` [6]
+- `noise.id -> pathfinder.travel` [6]
+- `noise.id -> textShape.fontSize` [5]
+- `noise.id -> duplicator.shapePosition.y` [5]
+- `noise.id -> duplicator.shapeScale` [4]
+- `noise.id -> subMesh.shapePosition` [4]
+- `noise.id -> editableShape.deformers.0` [4]
+- `noise.id -> stagger.maximum` [3]
+- `noise.id -> duplicator.shapeId` [3]
+- `noise.id -> attractorField.position` [3]
+
+#### `numberRange` (in 43 scenes)
+
+- `numberRange.id -> textValue.number` [15]
+- `numberRange.id -> rigControl.amount.x` [10]
+- `numberRange.id -> rigControl.amount.y` [10]
+- `numberRange.id -> colorBlend.strength` [7]
+- `numberRange.id -> rectangleShape.dimensions.y` [6]
+- `numberRange.id -> animationControl.amount` [5]
+- `numberRange.id -> superEllipseShape.push` [5]
+- `numberRange.id -> duplicator.shapePosition` [4]
+- `numberRange.id -> editableShape.rotation` [4]
+- `numberRange.id -> basicLine.rotation.z` [3]
+- `numberRange.id -> numberRange.value` [3]
+- `numberRange.id -> textShape.position.y` [3]
+- `numberRange.id -> colorArray.arrayIndex` [3]
+- `numberRange.id -> rectPatternShape.barWidth` [2]
+- `numberRange.id -> blurFilter.amount` [2]
+- `numberRange.id -> fill.fillColor.a` [2]
+- `numberRange.id -> strokeMaterial.width` [2]
+- `numberRange.id -> linearDistribution.size` [2]
+- `numberRange.id -> basicShape.opacity` [2]
+- `numberRange.id -> colorMaterial.materialColor` [2]
+
+#### `oscillator` (in 115 scenes)
+
+- `oscillator.id -> numberRange.value` [17]
+- `oscillator.id -> basicShape.position.y` [17]
+- `oscillator.id -> basicLine.deformers.0` [12]
+- `oscillator.id -> null.position.y` [12]
+- `oscillator.id -> duplicator.shapePosition.x` [9]
+- `oscillator.id -> basicShape.position.x` [9]
+- `oscillator.timeScale -> oscillator.timeScale` [8]
+- `oscillator.id -> duplicator.shapeRotation` [7]
+- `oscillator.id -> duplicator.shapeScale` [7]
+- `oscillator.id -> duplicator.shapePosition.y` [7]
+- `oscillator.id -> basicShape.rotation` [6]
+- `oscillator.id -> attractorField.strength` [6]
+- `oscillator.id -> colorBlend.strength` [6]
+- `oscillator.id -> basicShape.deformers.1` [6]
+- `oscillator.id -> duplicator.shapeScale.y` [6]
+- `oscillator.maximum -> oscillator.minimum` [5]
+- `oscillator.id -> indexToColor.value` [5]
+- `oscillator.id -> mathDistribution.array.4` [5]
+- `oscillator.id -> strokeMaterial.width` [4]
+- `oscillator.frequency -> oscillator.frequency` [4]
+
+#### `random` (in 72 scenes)
+
+- `random.id -> colorArray.arrayIndex` [14]
+- `random.id -> duplicator.shapeTimeOffset` [13]
+- `random.id -> ellipseShape.radius` [11]
+- `random.id -> textValue.number` [9]
+- `random.id -> strokeMaterial.width` [8]
+- `random.id -> duplicator.shapeId` [7]
+- `random.id -> behaviourMixer.behaviour.1.id` [7]
+- `random.id -> basicShape.position.z` [6]
+- `random.id -> numberRange.value` [5]
+- `random.id -> rectangleShape.dimensions` [5]
+- `random.id -> duplicator.shapeRotation` [5]
+- `random.id -> subMesh.shapeVisibility` [5]
+- `random.id -> ellipseShape.radius.x` [4]
+- `random.id -> pathDistribution.travel` [4]
+- `random.id -> valueArray.arrayIndex` [3]
+- `random.id -> noiseShader.time` [3]
+- `random.id -> duplicator.shapeScale.x` [3]
+- `random.id -> value.value` [3]
+- `random.id -> strokeMaterial.trimTravel` [3]
+- `random.id -> duplicator.shapeScale` [3]
+
+#### `simplexNoise` (in 111 scenes)
+
+- `simplexNoise.id -> noise.generator` [236]
+- `simplexNoise.id -> particleShape.generator` [5]
+- `simplexNoise.minimum -> numberRange.sourceMin` [4]
+- `simplexNoise.maximum -> numberRange.max` [4]
+- `simplexNoise.maximum -> numberRange.sourceMax` [4]
+- `simplexNoise.minimum -> numberRange.min` [4]
+- `simplexNoise.id -> turbulenceModifier.generator` [1]
+
+#### `stagger` (in 106 scenes)
+
+- `stagger.id -> duplicator.shapeTimeOffset` [52]
+- `stagger.id -> duplicator.shapeScale` [15]
+- `stagger.id -> blendSubMeshPositions.timeOffset` [15]
+- `stagger.id -> duplicator.shapeRotation` [15]
+- `stagger.id -> duplicator.shapePosition.y` [13]
+- `stagger.id -> pathfinder.travel` [12]
+- `stagger.id -> duplicator.shapeScale.x` [11]
+- `stagger.id -> subMesh.shapeTimeOffset` [10]
+- `stagger.id -> strokeMaterial.width` [9]
+- `stagger.id -> ellipseShape.radius` [9]
+- `stagger.id -> pathOffsetBehaviour.offset` [7]
+- `stagger.id -> behaviourMixer.behaviour.0.id` [6]
+- `stagger.id -> strokeMaterial.trimTravel` [4]
+- `stagger.maximum -> stagger.offset` [4]
+- `stagger.id -> colorArray.arrayIndex` [4]
+- `stagger.id -> 3dMatrix.positionZ` [4]
+- `stagger.id -> colorBlend.strength` [4]
+- `stagger.minimum -> stagger.maximum` [4]
+- `stagger.id -> value2.strength` [4]
+- `stagger.id -> value2.offset.x` [4]
+
+#### `value` (in 39 scenes)
+
+- `value.id -> strokeMaterial.width` [23]
+- `value.id -> basicShape.scale` [13]
+- `value.id -> basicShape.rotation.z` [11]
+- `value.id -> duplicator.shapeScale` [9]
+- `value.id -> ellipseShape.radius` [7]
+- `value.id -> math.second` [6]
+- `value.value -> mathDistribution.count` [5]
+- `value.id -> rectangleShape.dimensions` [5]
+- `value.id -> textShape.fontSize` [4]
+- `value.id -> behaviourMixer.behaviour.0.id` [4]
+- `value.id -> null.scale` [4]
+- `value.id -> sequence.seed` [4]
+- `value.id -> duplicator.shapeRotation` [4]
+- `value.id -> compositionReference.opacity` [3]
+- `value.id -> strokeMaterial.trimTravel` [3]
+- `value.id -> pathDistribution.count` [3]
+- `value.id -> ellipseShape.radius.y` [3]
+- `value.id -> ellipseShape.radius.x` [3]
+- `value.id -> 3dMatrix.rotation.x` [3]
+- `value.id -> 3dMatrix.rotationZ` [3]
+
+#### `value2` (in 14 scenes)
+
+- `value2.id -> rectangleShape.dimensions` [11]
+- `value2.id -> duplicator.shapePosition` [6]
+- `value2.id -> null.scale` [4]
+- `value2.value.y -> round.value` [4]
+- `value2.value.x -> round.value` [4]
+- `value2.id -> blurFilter.amount` [3]
+- `value2.value -> component.promotedAttributes.5.attribute` [3]
+- `value2.id -> group.scale` [3]
+- `value2.id -> behaviourMixer.behaviour.1.id` [2]
+- `value2.id -> behaviourMixer.behaviour.2.id` [1]
+- `value2.id -> behaviourMixer.behaviour.0.id` [1]
+- `value2.id -> dropShadowFilter.offset` [1]
+- `value2.id -> linearGradientShader.offset` [1]
+- `value2.id -> null.position` [1]
+- `value2.id -> basicShape.scale` [1]
+- `value2.value.x -> value2.value.y` [1]
+
+#### `value3` (in 1 scenes)
+
+- `value3.id -> sceneGroup::spheriseFilter.rotation` [1]
+
+### Shader / Material Connection Profiles
+
+#### `colorArray` (in 270 scenes)
+
+- `colorArray.id -> colorMaterial.materialColor` [137]
+- `colorArray.array.1 -> colorMaterial.materialColor` [34]
+- `colorArray.id -> strokeMaterial.strokeColor` [33]
+- `colorArray.array.0 -> colorMaterial.materialColor` [25]
+- `colorArray.array.2 -> colorMaterial.materialColor` [13]
+- `colorArray.array.1 -> strokeMaterial.strokeColor` [11]
+- `colorArray.array.4 -> colorMaterial.materialColor` [8]
+- `colorArray.array.3 -> strokeMaterial.strokeColor` [7]
+- `colorArray.array.2 -> strokeMaterial.strokeColor` [6]
+- `colorArray.array.0 -> strokeMaterial.strokeColor` [6]
+- `colorArray.array.1 -> colorBlend.gradient.0.color` [5]
+- `colorArray.array.4 -> triToneFilter.shadowColor` [4]
+- `colorArray.array.4 -> strokeMaterial.strokeColor` [4]
+- `colorArray.array.3 -> colorMaterial.materialColor` [4]
+- `colorArray.array.1 -> innerShadowFilter.shadowColor` [3]
+- `colorArray.id -> colorBlend.gradient.0.color` [2]
+- `colorArray.array.2 -> radialGradientShader.gradient.0.color` [2]
+- `colorArray.array.4 -> radialGradientShader.gradient.0.color` [1]
+- `colorArray.array.1 -> radialGradientShader.gradient.1.color` [1]
+- `colorArray.array.4 -> linearGradientShader.gradient.0.color` [1]
+
+#### `colorBlend` (in 16 scenes)
+
+- `colorBlend.id -> colorMaterial.materialColor` [17]
+- `colorBlend.id -> sweepGradientShader.gradient.1.color` [2]
+- `colorBlend.id -> sweepGradientShader.gradient.2.color` [2]
+- `colorBlend.id -> sweepGradientShader.gradient.0.color` [2]
+- `colorBlend.id -> strokeMaterial.strokeColor` [2]
+- `colorBlend.id -> linearGradientShader.gradient.1.color` [2]
+- `colorBlend.id -> colorArray.array.0` [1]
+- `colorBlend.id -> fill.fillColor` [1]
+- `colorBlend.id -> linearGradientShader.gradient.0.color` [1]
+
+#### `colorMaterial` (in 270 scenes)
+
+- `colorMaterial.id -> basicShape.material` [937]
+- `colorMaterial.id -> textShape.material` [260]
+- `colorMaterial.id -> editableShape.material` [239]
+- `colorMaterial.id -> backgroundShape.material` [208]
+- `colorMaterial.materialColor -> colorMaterial.materialColor` [58]
+- `colorMaterial.id -> customShape.material` [45]
+- `colorMaterial.id -> outline.material` [34]
+- `colorMaterial.id -> subMesh.material` [28]
+- `colorMaterial.id -> convexHull.material` [27]
+- `colorMaterial.id -> cornerPinShape.material` [26]
+- `colorMaterial.id -> extrude.material` [22]
+- `colorMaterial.id -> pointsToCurve.material` [16]
+- `colorMaterial.materialColor -> strokeMaterial.strokeColor` [10]
+- `colorMaterial.alpha -> strokeMaterial.alpha` [10]
+- `colorMaterial.id -> extractSubMeshes.material` [8]
+- `colorMaterial.id -> quadTreeShape.material` [6]
+- `colorMaterial.id -> subBoundingBox.material` [5]
+- `colorMaterial.id -> applyTextMaterial.material` [3]
+- `colorMaterial.id -> rectPatternShape.material` [3]
+- `colorMaterial.id -> basicLine.material` [3]
+
+#### `gradientShader` (in 81 scenes)
+
+- `gradientShader.id -> colorMaterial.colorShaders.0.shader` [138]
+- `gradientShader.id -> strokeMaterial.colorShaders.0.shader` [33]
+- `gradientShader.id -> shaderArray.array.0` [11]
+- `gradientShader.id -> shaderArray.array.1` [10]
+- `gradientShader.id -> shaderArray.array.2` [6]
+- `gradientShader.id -> colorMaterial.colorShaders.1.shader` [4]
+- `gradientShader.id -> distortionFilter.shader` [4]
+- `gradientShader.id -> shaderArray.array.3` [3]
+- `gradientShader.id -> shaderArray.array.4` [3]
+- `gradientShader.id -> shaderArray.array.5` [2]
+- `gradientShader.id -> colorMaterial.colorShaders.2.shader` [2]
+- `gradientShader.id -> shaderArray.array.6` [1]
+
+#### `indexToColor` (in 38 scenes)
+
+- `indexToColor.id -> colorMaterial.materialColor` [43]
+- `indexToColor.id -> strokeMaterial.strokeColor` [12]
+- `indexToColor.id -> radialGradientShader.gradient.1.color` [1]
+- `indexToColor.id -> multiPointGradientShader.point.0.pointColor` [1]
+- `indexToColor.id -> contrastingColor.inputColor` [1]
+
+#### `linearGradientShader` (in 81 scenes)
+
+- `linearGradientShader.id -> gradientShader.generator` [128]
+
+#### `strokeMaterial` (in 270 scenes)
+
+- `strokeMaterial.id -> basicShape.stroke` [212]
+- `strokeMaterial.id -> editableShape.stroke` [173]
+- `strokeMaterial.id -> basicLine.stroke` [131]
+- `strokeMaterial.id -> connectShape.stroke` [49]
+- `strokeMaterial.id -> pointsToCurve.stroke` [31]
+- `strokeMaterial.id -> convexHull.stroke` [23]
+- `strokeMaterial.strokeColor -> strokeMaterial.strokeColor` [20]
+- `strokeMaterial.id -> subMesh.stroke` [19]
+- `strokeMaterial.id -> extrude.stroke` [16]
+- `strokeMaterial.id -> trails.stroke` [16]
+- `strokeMaterial.width -> strokeMaterial.width` [15]
+- `strokeMaterial.id -> textShape.stroke` [13]
+- `strokeMaterial.id -> quadTreeShape.stroke` [6]
+- `strokeMaterial.id -> segmentPath.stroke` [4]
+- `strokeMaterial.id -> customShape.stroke` [3]
+- `strokeMaterial.id -> backgroundShape.stroke` [3]
+- `strokeMaterial.id -> outline.stroke` [2]
+- `strokeMaterial.id -> rectPatternShape.stroke` [2]
+- `strokeMaterial.id -> shortestPath.stroke` [2]
+- `strokeMaterial.width -> ellipseShape.radius.x` [1]
+
+### Duplicator Input Patterns
+
+What feeds into duplicator attributes:
+
+- `visibilityCurve.out -> duplicator.on` [600]
+- `basicShape.id -> duplicator.shapes.0` [314]
+- `pointDistribution.id -> duplicator.generator` [118]
+- `group.id -> duplicator.shapes.0` [112]
+- `gridDistribution.id -> duplicator.generator` [99]
+- `linearDistribution.id -> duplicator.generator` [90]
+- `sortDistribution.id -> duplicator.generator` [59]
+- `pathDistribution.id -> duplicator.generator` [57]
+- `basicLine.id -> duplicator.shapes.0` [56]
+- `stagger.id -> duplicator.shapeTimeOffset` [52]
+- `textShape.id -> duplicator.shapes.0` [44]
+- `duplicator.shapeScale.x -> duplicator.shapeScale.y` [41]
+- `circleDistribution.id -> duplicator.generator` [37]
+- `duplicator.id -> duplicator.shapes.0` [34]
+- `randomDistribution.id -> duplicator.generator` [33]
+- `subMesh.id -> duplicator.deformers.0` [31]
+- `meshDistribution.id -> duplicator.generator` [31]
+- `noise.id -> duplicator.shapePosition` [26]
+- `blendSubMeshPositions.id -> duplicator.deformers.0` [23]
+- `basicShape.id -> duplicator.shapes.1` [19]
+- `mathDistribution.id -> duplicator.generator` [18]
+- `animationCurve.out -> duplicator.shapeRotation` [17]
+- `valueArray.id -> duplicator.shapeRotation` [16]
+- `basicShape.id -> duplicator.masks.0.id` [16]
+- `visibility.id -> duplicator.shapeVisibility` [16]
+- `stagger.id -> duplicator.shapeScale` [15]
+- `stagger.id -> duplicator.shapeRotation` [15]
+- `animationCurve.out -> duplicator.position.y` [14]
+- `shapePointDistribution.id -> duplicator.generator` [13]
+- `random.id -> duplicator.shapeTimeOffset` [13]

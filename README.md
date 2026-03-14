@@ -1,35 +1,34 @@
+<img src="https://cavalry.scenegroup.co/wp-content/uploads/2022/03/cavalry-logo.svg" alt="Cavalry" width="200"/>
+
 # WRA Cavalry Assistant
 
-MCP server for [Cavalry](https://cavalry.scenegroup.co/) animation software. Lets Claude (or any MCP-compatible AI) write and execute Cavalry JavaScript directly, with a RAG knowledge base built from the official docs and community.
+An AI assistant for [Cavalry](https://cavalry.scenegroup.co/) that lets Claude write and run Cavalry scripts directly — no copy-pasting, no switching windows.
+
+---
 
 ## What it does
 
-- **Execute scripts** — runs Cavalry JS in real-time via the Stallion bridge
-- **Search knowledge** — semantic search over 37,000+ chunks of Cavalry docs
-- **Scene awareness** — reads and saves the active Cavalry scene
-- **System prompt** — auto-loads `prompts/system.md` + `prompts/cavalry-best-practices.md` as reference
+- **Write & run scripts** — Claude executes Cavalry JavaScript live via the Stallion bridge
+- **Knows the docs** — searches 37,000+ chunks of Cavalry documentation semantically
+- **Scene-aware** — reads and saves your active scene
+- **Stays current** — auto-loads a verified best-practices reference on every session
 
-## Architecture
-
-```
-cavalry-assistant/
-├── mcp/              TypeScript MCP server (Stallion bridge + RAG)
-├── etl/              Python ingestion pipeline (, docs, scripts)
-├── prompts/          System prompt + verified best-practices reference
-├── data/lancedb/     Vector knowledge base (LanceDB + nomic-embed-text)
-└── docker-compose.yml  Ollama + MCP server orchestration
-```
+---
 
 ## Requirements
 
-- [Cavalry](https://cavalry.scenegroup.co/) with Stallion enabled (`Scripts > Stallion`)
-- [Node.js](https://nodejs.org/) 18+
-- [Ollama](https://ollama.com/) (for local embeddings) — or Docker
-- [Claude Code](https://claude.ai/claude-code) or any MCP-compatible client
+| Tool | Purpose |
+|------|---------|
+| [Cavalry](https://cavalry.scenegroup.co/) | The app — needs Stallion enabled |
+| [Node.js 18+](https://nodejs.org/) | Runs the MCP server |
+| [Ollama](https://ollama.com/) | Local embeddings (or Docker) |
+| [Claude Code](https://claude.ai/claude-code) | The AI client |
 
-## Quick Start
+---
 
-### 1. Clone and install
+## Setup
+
+### 1. Install
 
 ```bash
 git clone <repo-url> cavalry-assistant
@@ -39,28 +38,28 @@ npm install --prefix mcp
 npm run build --prefix mcp
 ```
 
-### 2. Start Ollama (for embeddings)
+### 2. Start Ollama
 
 ```bash
-# Option A: Docker (recommended)
+# Docker (recommended)
 docker compose up ollama -d
 docker exec -it cavalry-assistant-ollama-1 ollama pull nomic-embed-text
 
-# Option B: Local Ollama
+# Or local Ollama
 ollama pull nomic-embed-text
 ```
 
-### 3. Register with Claude Code
+### 3. Connect to Claude Code
 
-The `.mcp.json` in this directory auto-registers the server when you open the folder in Claude Code. Or register manually:
+The `.mcp.json` in this folder auto-registers when you open it in Claude Code. Or manually:
 
 ```bash
 claude mcp add cavalry-assistant node mcp/dist/index.js
 ```
 
-### 4. Open Cavalry and enable Stallion
+### 4. Enable Stallion in Cavalry
 
-In Cavalry: `Scripts > Stallion` — leave it running on port 8080.
+`Scripts > Stallion` — leave it running on port 8080.
 
 ### 5. Start a session
 
@@ -68,62 +67,55 @@ In Cavalry: `Scripts > Stallion` — leave it running on port 8080.
 /cavalry
 ```
 
-Claude will ping Stallion and confirm it's connected.
+Claude pings Stallion and confirms the connection.
+
+---
 
 ## Docker (full stack)
-
-Runs Ollama + MCP server together:
 
 ```bash
 docker compose up -d
 ```
 
-For ETL ingestion (optional, rebuilds the knowledge base):
+Rebuild the knowledge base (optional):
 
 ```bash
 docker compose --profile tools run etl python ingest.py --source all
 ```
 
-## ETL — Rebuilding the Knowledge Base
+---
 
-The knowledge base is pre-built and included in `data/lancedb/`. To rebuild from scratch:
+## Rebuilding the Knowledge Base
+
+The knowledge base comes pre-built in `data/lancedb/`. To rebuild:
 
 ```bash
 cd etl
 pip install -r requirements.txt
-cp ../.env .env
 
-# Ingest official docs (scraped from docs.cavalry.scenegroup.co)
-python ingest.py --source docs
-
-# Ingest Discord exports (requires DISCORD_TOKEN in .env)
-python ingest.py --source discord
-
-# Ingest all
+python ingest.py --source docs      # official docs
+python ingest.py --source discord   # Discord export (needs DISCORD_TOKEN)
 python ingest.py --source all --reset
 ```
 
-## MCP Tools
+---
 
-| Tool | Description |
-|------|-------------|
-| `cavalry_ping` | Check Stallion is reachable |
-| `cavalry_run_script` | Execute Cavalry JavaScript |
-| `cavalry_get_scene_info` | Get active scene info |
-| `cavalry_save_scene` | Save the current scene |
-| `cavalry_search_knowledge` | Semantic search the knowledge base |
+## Good to know
 
-## Environment Variables
+- Stallion always responds `"Success"` — check Cavalry's console panel for actual errors
+- Always start scene-modifying scripts with `api.stop()`
+- Full API reference: `prompts/cavalry-best-practices.md`
 
-See `.env.example` for all configuration options.
+---
 
-Key variables:
-- `CAVALRY_HOST` — Stallion bridge address (default: `127.0.0.1:8080`)
-- `EMBED_BACKEND` — `ollama` (default) or `openai`
-- `DB_BACKEND` — `local` (LanceDB, default) or `supabase`
+## Credits
 
-## Notes
+Built with:
 
-- Stallion always returns `"Success"` — errors appear in Cavalry's console panel
-- Always call `api.stop()` as the first line of scene-modifying scripts
-- See `prompts/cavalry-best-practices.md` for the full verified API reference (batch-tested)
+- [Cavalry](https://cavalry.scenegroup.co/) by **Scene Group** — the animation software this wraps
+- [Stallion](https://docs.cavalry.scenegroup.co/) — Cavalry's built-in scripting bridge
+- [Model Context Protocol SDK](https://github.com/modelcontextprotocol/typescript-sdk) by **Anthropic**
+- [LanceDB](https://github.com/lancedb/lancedb) — vector database for RAG
+- [Ollama](https://ollama.com/) + [nomic-embed-text](https://ollama.com/library/nomic-embed-text) — local embeddings
+
+Knowledge base sourced from the [Cavalry official docs](https://docs.cavalry.scenegroup.co/) and the Cavalry Discord community.

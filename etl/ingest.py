@@ -6,6 +6,7 @@ from pathlib import Path
 from tqdm import tqdm
 from dotenv import load_dotenv
 
+from chunkers.cv import chunk_cv
 from chunkers.discord import chunk_discord_export
 from chunkers.markdown import chunk_markdown
 from chunkers.script import chunk_script
@@ -43,8 +44,11 @@ def embed_and_upsert(chunks: list[dict], embedder_cfg: EmbedderConfig, store: Kn
     return len(chunks)
 
 
+CV_DIR = Path(__file__).resolve().parent.parent / "data" / "scenery_cv"
+
+
 @click.command()
-@click.option("--source", type=click.Choice(["discord", "docs", "manual", "scripts", "scenery", "all"]), required=True)
+@click.option("--source", type=click.Choice(["discord", "docs", "manual", "scripts", "scenery", "cv", "all"]), required=True)
 @click.option("--path", default=None, help="Path to specific file (discord source only)")
 @click.option("--reset", is_flag=True, default=False, help="Wipe and re-ingest all data")
 def ingest(source: str, path: str | None, reset: bool):
@@ -86,6 +90,15 @@ def ingest(source: str, path: str | None, reset: bool):
             code = f.read_text(encoding="utf-8")
             chunks = chunk_script(code, filename=f.name)
             total += embed_and_upsert(chunks, embedder_cfg, store)
+
+    if source in ("cv", "all"):
+        for f in tqdm(list(CV_DIR.glob("*.cv")), desc="CV Scenes"):
+            try:
+                data = json.loads(f.read_text(encoding="utf-8"))
+                chunks = chunk_cv(data, filename=f.name)
+                total += embed_and_upsert(chunks, embedder_cfg, store)
+            except Exception as e:
+                click.echo(f"  Warning: skipping {f.name}: {e}")
 
     click.echo(f"Done. {total} chunks ingested. Total in DB: {store.count()}")
 
