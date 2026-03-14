@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "cavalry-assistant": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["mcp/dist/index.js"],
+      "env": {
+        "CAVALRY_HOST": "127.0.0.1:8080",
+        "DB_BACKEND": "local",
+        "LANCEDB_PATH": "./data/lancedb",
+        "OLLAMA_HOST": "http://localhost:11434",
+        "EMBED_BACKEND": "ollama"
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "wra-cavalry-assistant",
+  "version": "1.0.0",
+  "description": "WRA Cavalry Assistant — MCP server (Stallion bridge + RAG knowledge base)",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": { "cavalry-assistant": "dist/index.js" },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "@lancedb/lancedb": "^0.9.0",
+    "@supabase/supabase-js": "^2.45.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0",
+    "vitest": "^2.0.0"
+  }
+}
