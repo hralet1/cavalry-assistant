@@ -1,0 +1,12 @@
+data/
+mcp/node_modules/
+mcp/src/
+mcp/tests/
+mcp/*.config.*
+mcp/tsconfig.json
+etl/__pycache__/
+etl/.pytest_cache/
+etl/tests/
+etl/sources/discord/
+.env
+.git/

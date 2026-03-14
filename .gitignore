@@ -1,0 +1,47 @@
+# Environment — never commit secrets
+.env
+
+# Node
+node_modules/
+mcp/dist/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# ETL source data — large, machine-generated, or contains tokens
+etl/sources/discord/*.json
+etl/sources/docs/
+etl/sources/scenery/
+
+# LanceDB vector stores — large binary data, never commit
+# Private DB (includes Discord): rebuild via ETL
+data/lancedb/
+# Public DB snapshot: build via export_public_db.py, zip for GitHub Releases
+data/lancedb_public/
+data/lancedb_public.zip
+etl/data/
+*.lance
+
+# Scraped example files from scenery.io
+data/scenery_cv/
+
+# Development / batch test artifacts
+batch*.json
+test_results_*.json
+cavalry_discover_all.js
+cavalry_discovery_results.txt
+cavalry_test_all.js
+comp_info.json
+comp_info2.json
+scene_info.json
+channel.md
+
+# Debug output files
+debug_*.json
+
+# Temp / misc
+*.bak
+.DS_Store
+Thumbs.db

@@ -1,0 +1,48 @@
+services:
+  ollama:
+    image: ollama/ollama
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    entrypoint: >
+      sh -c "ollama serve & sleep 5 && ollama pull nomic-embed-text && wait"
+
+  cavalry-assistant:
+    build:
+      context: .
+      dockerfile: mcp/Dockerfile
+    environment:
+      - CAVALRY_HOST=${CAVALRY_HOST:-host.docker.internal:8080}
+      - DB_BACKEND=${DB_BACKEND:-local}
+      - LANCEDB_PATH=/data/lancedb
+      - OLLAMA_HOST=http://ollama:11434
+      - SUPABASE_URL=${SUPABASE_URL:-}
+      - SUPABASE_KEY=${SUPABASE_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - SCENE_INFO_PATH=${SCENE_INFO_PATH:-cavalry_scene_info.json}
+    volumes:
+      - ./data:/data
+    depends_on:
+      - ollama
+    stdin_open: true
+
+  etl:
+    build:
+      context: .
+      dockerfile: etl/Dockerfile
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+      - LANCEDB_PATH=/data/lancedb
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - EMBED_BACKEND=${EMBED_BACKEND:-ollama}
+    volumes:
+      - ./data:/data
+      - ./etl/sources:/app/sources
+    depends_on:
+      - ollama
+    profiles:
+      - tools
+
+volumes:
+  ollama_data:

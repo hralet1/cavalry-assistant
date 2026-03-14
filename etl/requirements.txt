@@ -1,0 +1,10 @@
+lancedb>=0.8.0
+ollama>=0.3.0
+openai>=1.0.0
+click>=8.0.0
+python-dotenv>=1.0.0
+tqdm>=4.0.0
+tiktoken>=0.7.0
+pytest>=8.0.0
+pyarrow>=14.0.0
+requests>=2.31.0
