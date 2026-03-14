@@ -2,7 +2,7 @@
 
 <img src="logo/WRA_LOGO.png" alt="WRA" width="260"/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<img src="logo/logo_cavalry-landscape-outline_001.svg" alt="Cavalry" width="260"/>
+<img src="logo/logo_cavalry.png" alt="Cavalry" width="260"/>
 
 <br/>
 
