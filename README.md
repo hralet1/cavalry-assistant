@@ -1,4 +1,4 @@
-<img src="https://cavalry.scenegroup.co/wp-content/uploads/2022/03/cavalry-logo.svg" alt="Cavalry" width="200"/>
+<img src="logo/logo_cavalry-landscape-outline_white.svg" alt="Cavalry" width="300"/>
 
 # WRA Cavalry Assistant
 
